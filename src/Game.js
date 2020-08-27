@@ -29,34 +29,53 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nextSymbol: 'x',
+      currPlayer: { name: 'player1', symbol: 'X' },
+      nextPlayer: { name: 'player2', symbol: 'O' },
       tiles: Array.from(Array(9), () => ''),
-      continue: true,
+      draw: false,
+      winner: null,
     };
     this.handleChange = this.handleChange.bind(this);
+    this.isOver = this.isOver.bind(this);
   }
 
-  isWon(props) {
+  isOver(props) {
     const combinations = getPossibilities(props.currID, 3);
-    return combinations.some((indices) =>
+    const won = combinations.some((indices) =>
       isInSameLine(indices, this.state.tiles, this.state.tiles[props.currID])
     );
+    if (won) {
+      this.setState((prevState) => ({ winner: this.state.currPlayer }));
+    }
+    const draw = !this.state.tiles.some((sym) => sym === '');
+    if (draw) {
+      this.setState((prevState) => ({ draw: true }));
+    }
+    return won || draw;
   }
 
   handleChange(event) {
     const tiles = this.state.tiles;
     const value = tiles[event.target.id];
     if (value === '') {
-      tiles[event.target.id] = this.state.nextSymbol;
-      const nextSymbol = this.state.nextSymbol === 'x' ? 'o' : 'x';
-      const won = this.isWon({ currID: event.target.id });
-      this.setState({ tiles, nextSymbol, continue: !won });
+      tiles[event.target.id] = this.state.currPlayer.symbol;
+      const gameOver = this.isOver({ currID: event.target.id });
+      this.setState({
+        tiles,
+        currPlayer: this.state.nextPlayer,
+        nextPlayer: this.state.currPlayer,
+      });
     }
   }
 
   render() {
-    if (!this.state.continue) {
-      return <div style={{ textAlign: 'center' }}>You won</div>;
+    if (this.state.draw) {
+      return <div style={{ textAlign: 'center' }}>Game end no one win</div>;
+    }
+    if (this.state.winner) {
+      return (
+        <div style={{ textAlign: 'center' }}>{this.state.winner.name} won</div>
+      );
     }
     return <Board tiles={this.state.tiles} onClick={this.handleChange} />;
   }

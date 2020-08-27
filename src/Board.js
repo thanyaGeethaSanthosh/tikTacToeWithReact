@@ -3,7 +3,14 @@ import Tile from './Tile';
 
 const Board = (props) => {
   const tiles = props.tiles.map((element, index) => {
-    return <Tile element={element} index={index} onClick={props.onClick} />;
+    return (
+      <Tile
+        element={element}
+        key={index + 10}
+        index={index}
+        onClick={props.onClick}
+      />
+    );
   });
   return (
     <div
