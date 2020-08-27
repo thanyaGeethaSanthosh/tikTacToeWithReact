@@ -1,22 +1,5 @@
 import React from 'react';
-
-const Tile = (props) => {
-  return (
-    <div
-      onClick={props.onClick}
-      style={{
-        border: '1px solid black',
-        width: '10vw',
-        height: '10vh',
-        padding: '1vw',
-      }}
-      key={`${props.index}`}
-      id={`${props.index}`}
-    >
-      {props.element}
-    </div>
-  );
-};
+import Board from './Board';
 
 const isInSameLine = (indices, set, currElement) => {
   return indices.every((index) => set[index] === currElement);
@@ -75,25 +58,7 @@ class Game extends React.Component {
     if (!this.state.continue) {
       return <div style={{ textAlign: 'center' }}>You won</div>;
     }
-    const box = this.state.tiles.map((element, index) => {
-      return (
-        <Tile element={element} index={index} onClick={this.handleChange} />
-      );
-    });
-    return (
-      <div
-        style={{
-          marginLeft: '31.5vw',
-          marginTop: '3vh',
-          display: 'flex',
-          flexWrap: 'wrap',
-          width: '40vw',
-          height: '40vh',
-        }}
-      >
-        {box}
-      </div>
-    );
+    return <Board tiles={this.state.tiles} onClick={this.handleChange} />;
   }
 }
 
