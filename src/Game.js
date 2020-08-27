@@ -76,11 +76,9 @@ class Game extends React.Component {
       return <div style={{ textAlign: 'center' }}>You won</div>;
     }
     const box = this.state.tiles.map((element, index) => {
-      return Tile({
-        element,
-        index,
-        onClick: this.handleChange,
-      });
+      return (
+        <Tile element={element} index={index} onClick={this.handleChange} />
+      );
     });
     return (
       <div
